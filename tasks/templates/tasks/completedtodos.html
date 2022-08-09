@@ -1,0 +1,32 @@
+{% extends "tasks/main.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-10">
+        <h1>Completed Todos</h1>
+    </div>
+</div>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-10">
+        {% if todos %}
+        <div class="list-group">
+            {% for todo in todos %}
+            <a href="{% url 'tasks:viewtodo' todo.id %}"
+                class="list-group-item list-group-item-action{% if todo.important %} list-group-item-warning{% endif %}">
+                <div class="d-flex w-100 justify-content-between">
+                    <h4 class="mb-1"><b>{{ todo.title }}</b></h4>
+                    <small>Completed - {{ todo.datecompleted|date:'M j Y H:i' }}</small>
+                </div>
+            </a>
+            {% endfor %}
+            {% else %}
+            <div class="text-center">
+                <h2>Looks like you din't complete any tasks!</h2>
+                <br>
+                <a role="button" class="btn btn-primary" href="{% url 'tasks:home' %}">Current Tasks</a>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

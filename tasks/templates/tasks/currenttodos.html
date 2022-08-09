@@ -1,0 +1,43 @@
+{% extends "tasks/main.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-10">
+        {% if todos %}
+        <h1>Current Todo{{ todos.count|pluralize }} - {{ todos.count }}</h1>
+        {% else %}
+        <h1>Current Todos</h1>
+        {% endif %}
+    </div>
+</div>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-10">
+        {% if todos %}
+
+        <div class="list-group">
+            {% for todo in todos %}
+            <a href="{% url 'tasks:viewtodo' todo.id %}" class="list-group-item list-group-item-action{% if todo.important %} list-group-item-primary{% endif %}">
+                <div class="d-flex w-100 justify-content-between">
+                    <h4 class="mb-1"><b>{{ todo.title }}</b></h4>
+                    <small>{{ todo.created }}</small>
+                </div>
+                    {% if todo.memo %}
+                    <p class="mb-1">{{ todo.memo|truncatechars:30 }}</p>
+                    {% endif %}
+            </a>
+            {% endfor %}
+            <form action="{% url 'tasks:createtodo' %}">
+                <button type="submit" class="btn btn-primary btn-lg btn-block">+</button>
+            </form>
+        </div>
+
+        {% else %}
+        <div class="text-center">
+            <h2>Looks like you don't have any todos! Nice work.</h2>
+            <br>
+            <a role="button" class="btn btn-primary" href="{% url 'tasks:createtodo' %}">New Todo</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

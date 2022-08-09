@@ -1,0 +1,11 @@
+{% extends 'tasks/main.html' %}
+
+
+{% block content %}
+
+<h1>Username :   {{user.username}}</h1>
+<h1>Email :  {{user.email}}</h1>
+<h1>Phone Number: {{user.phone}}</h1><br>
+<a href="{% url 'reset_password' %}"><button class="btn btn-primary">Change Password</button></a>
+
+{% endblock %}

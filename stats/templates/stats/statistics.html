@@ -1,0 +1,14 @@
+{% extends 'tasks/main.html' %}
+{% block content %}
+{% load static %}
+
+<h1>Statistics</h1><br>
+<p>Total number of meetings you are in {{count}}</p>
+<p>Total number of meetings you have attended is {{attended}}</p>
+<p>Total duration of meetings you are in is {{duration}}</p>
+{% for meeting in meetings %}
+    {{meeting}}--{{meeting.attended}}<br>
+{% endfor %}
+
+<!--img src="{% static 'stats/piechart.jpg' %}" alt="pieChart"-->
+{% endblock %}  
