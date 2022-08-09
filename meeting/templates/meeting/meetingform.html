@@ -1,0 +1,78 @@
+{% extends "tasks/main.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <h2>Create New Meeting</h2>
+    </div>
+</div>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+        {% load crispy_forms_tags %}
+        <form method="POST">
+            {% csrf_token %}
+            <div id="div_id_purpose" class="form-group"> 
+                <label for="id_purpose" class=" requiredField">
+                Purpose<span class="asteriskField">*</span> 
+            </label> <div class=""> 
+                <input type="text" name="purpose" maxlength="250" class="textinput textInput form-control" required id="id_purpose"> </div> </div> 
+
+
+
+
+                <div id="div_id_meet_date" class="form-group"> 
+                    <label for="id_meet_date" class=" requiredField">
+                Meet date<span class="asteriskField">*</span> 
+            </label> <div class=""> <input type="date" name="meet_date" class="dateinput form-control" required id="id_meet_date"> </div> </div> 
+
+
+
+
+            <div id="div_id_from_time" class="form-group"> <label for="id_from_time" class=" requiredField">
+                From time<span class="asteriskField">*</span> </label> 
+                <div class=""> <input type="time" name="from_time" class="timeinput form-control" required id="id_from_time"> </div> </div> 
+                
+                
+                
+                <div id="div_id_to_time" class="form-group"> <label for="id_to_time" class=" requiredField">
+                To time<span class="asteriskField">*</span> </label> <div class=""> <input type="time" name="to_time" class="timeinput form-control" required id="id_to_time"> </div> </div> 
+                
+                
+                <div id="div_id_venue" class="form-group"> <label for="id_venue" class=" requiredField">
+                Venue<span class="asteriskField">*</span> </label> <div class=""> <input type="text" name="venue" maxlength="100" class="textinput textInput form-control" required id="id_venue"> </div> </div> 
+                
+                
+                <div id="div_id_members" class="form-group"> 
+                    <label for="" class=" requiredField">Members<span class="asteriskField">*</span> </label> 
+                    <div class=""> 
+                        {% for user in users %}
+                        <div class="form-check"> 
+                            <input type="checkbox" class="form-check-input" name="members" id="id_members_1" value="{{user.id}}"  > 
+                            <label class="form-check-label" for="id_members_1">{{user.username}}</label> 
+                        </div> 
+                        {% endfor %}
+                    </div> 
+                </div> 
+        
+        
+        
+        <div id="div_id_meet_link" class="form-group"> <label for="id_meet_link" class=" requiredField">
+                Meet link<span class="asteriskField">*</span> </label> <div class=""> <input type="url" name="meet_link" maxlength="200" class="urlinput form-control" required id="id_meet_link"> </div> </div> 
+                
+                
+                <div class="form-group"> <div id="div_id_important" class="form-check"> <input type="checkbox" name="important" class="checkboxinput form-check-input" id="id_important"> <label for="id_important" class="form-check-label">
+                    Important
+                </label> </div> 
+        </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

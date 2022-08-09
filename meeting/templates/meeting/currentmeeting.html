@@ -1,0 +1,69 @@
+{% extends 'tasks/main.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-10">
+        {% if meetings %}
+        <h1>Current Meeting{{ meeting.count|pluralize }} - {{ meeting.count }}</h1>
+        {% else %}
+        <h1>Current Meeting</h1>
+        {% endif %}
+    </div>
+</div>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-10">
+        {% if meetings %}
+            {% if url == '/meetings/' %}
+                <div class="list-group">
+                    {% for meeting in meetings %}
+                        {% if meeting.meet_date > date_now %}
+                        <a href="{% url 'meeting:viewmeeting' meeting.id %}" class="list-group-item list-group-item-action{% if meeting.from_time >= meeting.to_time %} list-group-item-danger {% endif %}{% if meeting.important %} list-group-item-primary{% endif %}">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h4 class="mb-1"><b>{{ meeting.purpose }}</b></h4>
+                                <small>Hosted By: {{ meeting.user }}    |   Date Assgined: {{ meeting.meet_date }}</small>
+                            </div>
+                                <p class="mb-1">{{ meeting.venue|truncatechars:30 }}</p>
+                        </a>
+                        {% endif %}
+                    {% endfor %}
+                    <form action="{% url 'meeting:meetingform' %}">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">+</button>
+                    </form>
+                    <h6></h6><a href = "{% url 'meeting:meetinghistory' %}">View Meeting history</a></h6>
+                </div>
+            {% else %}
+            <div class="list-group">
+                {% for meeting in meetings %}
+                    {% if meeting.meet_date < date_now %}
+                    <a href="{% url 'meeting:viewmeeting' meeting.id %}" class="list-group-item list-group-item-action{% if meeting.from_time >= meeting.to_time %} list-group-item-danger {% endif %}{% if meeting.important %} list-group-item-primary{% endif %}">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h4 class="mb-1"><b>{{ meeting.purpose }}</b></h4>
+                            <small>Hosted By: {{ meeting.user }}    |   Date Assgined: {{ meeting.meet_date }}</small>
+                        </div>
+                            <p class="mb-1">{{ meeting.venue|truncatechars:30 }}</p>
+                    </a>
+                    {% elif meeting.meet_date <= date_now and meeting.to_time <= time_now %}
+                    <a href="{% url 'meeting:viewmeeting' meeting.id %}" class="list-group-item list-group-item-action{% if meeting.from_time >= meeting.to_time %} list-group-item-danger {% endif %}{% if meeting.important %} list-group-item-primary{% endif %}">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h4 class="mb-1"><b>{{ meeting.purpose }}</b></h4>
+                            <small>Hosted By: {{ meeting.user }}    |   Date Assgined: {{ meeting.meet_date }}</small>
+                        </div>
+                            <p class="mb-1">{{ meeting.venue|truncatechars:30 }}</p>
+                    </a>
+                    {% endif %} 
+                {% endfor %}
+                <h6></h6><a href = "{% url 'meeting:currentmeetings' %}">View current meetings</a></h6>
+            </div>
+            {% endif %}
+
+        {% else %}
+        <div class="text-center">
+            <h2>Looks like you don't have any Meetings! Relax yourself!</h2>
+            <br>
+            <a role="button" class="btn btn-primary" href="{% url 'meeting:meetingform' %}">New Meeting</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

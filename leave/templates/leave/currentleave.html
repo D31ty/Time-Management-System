@@ -1,0 +1,63 @@
+{% extends "tasks/main.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-10">
+        {% if leave %}
+        <h1>Applied Leave</h1>
+        {% else %}
+        <h1>Applied Leave</h1>
+        {% endif %}
+    </div>
+</div>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-10">
+        {% if leave %}
+            {% if url == "/leave/" %}
+                <div class="list-group">
+                    {% for l in leave %}
+                        {% if l.to_date > time_now %}
+                        <a href="{% url 'leave:viewleave' l.id %}" class="list-group-item list-group-item-action{% if l.to_date < l.from_date %} list-group-item-danger{% endif %} {% if l.important %} list-group-item-primary{% endif %}">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h4 class="mb-1"><b>{{ l.title }}</b></h4>
+                                <small>{{ l.datesubmitted }}</small>
+                            </div>
+                                {% if l.memo %}
+                                <p class="mb-1">{{ l.memo|truncatechars:30 }}</p>
+                                {% endif %}
+                        </a>
+                        {% endif %}
+                    {% endfor %}
+                    <form action="{% url 'leave:leaveform' %}">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">+</button>
+                    </form>
+                    <h6></h6><a href = "{% url 'leave:leavehistory' %}">View Leave history</a></h6>
+                </div>
+            {% else %}
+                <div class="list-group">
+                    {% for l in leave %}
+                        {% if l.to_date < time_now %}
+                            <a href="{% url 'leave:viewleave' l.id %}" class="list-group-item list-group-item-action {% if l.to_date < l.from_date %} list-group-item-danger {% elif l.important %} list-group-item-primary{% endif %}">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h4 class="mb-1"><b>{{ l.title }}</b></h4>
+                                    <small>{{ l.datesubmitted }}</small>
+                                </div>
+                                    {% if l.memo %}
+                                    -- <br><p class="mb-1">{{ l.memo|truncatechars:30 }}</p>
+                                    {% endif %}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                    <h6></h6><a href = "{% url 'leave:currentleave' %}">View current leave</a></h6>
+                </div>
+            {% endif %}
+        {% else %}
+        <div class="text-center">
+            <h2>Looks like you don't have any leave applied! Nice work.</h2>
+            <br>
+            <a role="button" class="btn btn-primary" href="{% url 'leave:leaveform' %}">Apply Leave</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

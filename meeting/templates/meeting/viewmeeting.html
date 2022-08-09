@@ -1,0 +1,93 @@
+{% extends "tasks/main.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <h2>Meeting Details</h2>
+    </div>
+</div>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+        {% if meeting.from_time >= meeting.to_time %}
+        <div class="alert alert-danger" role="alert">
+            <h6>Invalid choice of start and end time</h6>
+        </div>
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="purpose">purpose:</label>
+                <p>{{meeting.purpose}}</p>
+            </div>
+            <div class="form-group">
+                <label for="meet_date">meet_date:</label>
+                <p>{{meeting.meet_date}}</p>
+
+            </div>
+            <div class="form-group">
+                <label for="host">host:</label>
+                <p>{{meeting.user}}</p>
+
+            </div>
+            <div class="form-group">
+                <label for="dateassigned">date assigned:</label>
+                <p>{{meeting.dateassigned}}</p>
+
+            </div>
+            <div class="form-group">
+                <label for="from_time">from_time:</label>
+                <p>{{meeting.from_time}}</p>
+                
+            </div>
+            <div class="form-group">
+                <label for="to_time">to_time:</label>
+                <p>{{meeting.to_time}}</p>
+            </div>
+            <div class="form-group">
+                <label for="venue">venue:</label>
+                <p>{{meeting.venue}}</p>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" name="important" class="form-check-input" id="important"
+                    {% if meeting.important %}checked{% endif %} disabled='disabled'>
+                <label class="form-check-label" for="important">Important</label>
+            </div>
+            {% if meeting.meet_date < date_now %}
+            <div class="form-group">
+                <h6>MeetLink : <a href="{{meeting.meet_link}}" target="_blank">Join Meeting</a></h6>
+            </div>
+            {% elif meeting.meet_date <= date_now and meeting.to_time <= time_now %}
+            <div class="form-group">
+                <h6>MeetLink : <a href="{{meeting.meet_link}}" target="_blank">Join Meeting</a></h6>
+            </div>
+            {% else %}
+            <div class="form-group">
+                <h6>Meet Link : <a href="{{meeting.meet_link}}" target="_blank" onclick="$('#count').click()" >Join Meeting</a></h6>
+            </div>
+            {% endif %}
+
+            <div class="btn-group btn-group-lg" role="group" aria-label="...">
+            <!--button type="submit" class="btn btn-primary">Save</button-->
+            {% if meeting.meet_date > date_now and user == meeting.user %}
+            <button type="button" class="btn btn-primary" onclick="$('#delete').click()">Delete</button>
+            {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+
+<form style='display: none;' method="POST" action="{% url 'meeting:deletemeeting' meeting.id %}">
+    {% csrf_token %}
+    <button id="delete" type="submit">Delete</button>
+</form>
+<form style='display: none;' method="POST" action="{% url 'meeting:attended' meeting.id %}">
+    {% csrf_token %}
+    <button id="count" type="submit">Count_Attended</button>
+</form>
+
+{% endblock %}
